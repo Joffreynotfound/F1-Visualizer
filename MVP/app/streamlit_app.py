@@ -1,6 +1,44 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
+
+def generate_map(data):
+    fig = go.Figure()
+
+    # Ligne de base du circuit
+    fig.add_trace(
+        go.Scatter(
+            x=data["X"],
+            y=data["Y"],
+            mode="lines",
+            line=dict(
+                color="rgba(180, 180, 180, 0.35)",
+                width=8
+            ),
+            name="Track layout",
+            hoverinfo="skip"
+        )
+    )
+
+    fig.update_layout(
+        title="Leclerc Fastest Lap — Speed Map",
+        template="plotly_dark",
+        height=750,
+        showlegend=False,
+        paper_bgcolor="#0E1117",
+        plot_bgcolor="#0E1117",
+        margin=dict(l=20, r=20, t=60, b=20),
+        xaxis=dict(
+            visible=False,
+            scaleanchor="y"
+        ),
+        yaxis=dict(
+            visible=False
+        )
+    )
+
+    return fig
 
 def load_data(file_path):
     try:
@@ -11,26 +49,11 @@ def load_data(file_path):
         print(f"An error occurred while loading data: {e}")
         return None
 
-def generate_map(data):
-    fig = px.scatter(
-        data,
-        x="X",
-        y="Y",
-        color="Speed",
-        size="Speed",
-        title="F1 Telemetry Map"
-    )
-    return fig
-
 st.title("F1 Visualizer")
 
 data = load_data('data/processed/lec_telemetry.csv')
-if data is not None:
-    st.write("Data Preview:")
-    st.dataframe(data.head())
-
-    st.write("Generating Map...")
-    fig = generate_map(data)
-    st.plotly_chart(fig)
-else:
+if data is None:
     st.write("Failed to load data.")
+else:
+    fig = generate_map(data)
+    st.plotly_chart(fig, use_container_width=True)
