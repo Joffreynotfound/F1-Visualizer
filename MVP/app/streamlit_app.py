@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
+
 def generate_map(data):
     fig = go.Figure()
 
@@ -21,20 +22,15 @@ def generate_map(data):
         )
     )
 
-    fig.update_layout(
-        title="Leclerc Fastest Lap — Speed Map",
-        template="plotly_dark",
-        height=750,
-        showlegend=False,
-        paper_bgcolor="#0E1117",
-        plot_bgcolor="#0E1117",
-        margin=dict(l=20, r=20, t=60, b=20),
-        xaxis=dict(
-            visible=False,
-            scaleanchor="y"
-        ),
-        yaxis=dict(
-            visible=False
+    # Ajout du pilote
+    fig.add_trace(
+        go.Scatter(
+            x=[data["X"].iloc[0]],
+            y=[data["Y"].iloc[0]],
+            mode="markers",
+            marker=dict(color="rgba(255, 0, 0, 1)", size=14, symbol="circle"),
+            name="Leclerc",
+            hoverinfo="skip"
         )
     )
 
