@@ -4,6 +4,9 @@ import sys
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SRC_DIR = PROJECT_ROOT / "src"
+
+# Streamlit lance ce fichier depuis `app/`, donc on ajoute `src/` au path
+# pour pouvoir importer les modules du projet sans installer un package local.
 sys.path.append(str(SRC_DIR))
 
 from data_loader import load_data
@@ -12,7 +15,8 @@ from visualizer import create_visualization
 
 st.title("F1 Visualizer")
 
-data = load_data(PROJECT_ROOT / "data/processed/lec_telemetry.csv")
+data_path = PROJECT_ROOT / "data/processed/lec_telemetry.csv"
+data = load_data(data_path)
 if data is None:
     st.write("Failed to load data.")
 else:

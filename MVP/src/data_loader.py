@@ -1,5 +1,7 @@
 import pandas as pd
 
+# Colonnes minimales dont l'application a besoin pour afficher la carte,
+# animer le pilote et calculer les metriques principales.
 REQUIRED_COLUMNS = {"X", "Y", "Speed", "Time"}
 
 def validate_telemetry_data(data):

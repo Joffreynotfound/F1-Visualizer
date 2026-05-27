@@ -1,6 +1,7 @@
 import plotly.graph_objects as go
 import pandas as pd
 
+
 def create_visualization(data: pd.DataFrame, driver_name: str = "Leclerc", driver_color: str = "rgba(255, 0, 0, 1)") -> go.Figure:
     fig = go.Figure()
 
@@ -30,12 +31,13 @@ def create_visualization(data: pd.DataFrame, driver_name: str = "Leclerc", drive
             hoverinfo="skip"
         )
     )
-    # Lancement de l'usine de calques pour l'animation
+    # Chaque frame met a jour uniquement la trace 1, c'est-a-dire le marqueur
+    # du pilote. La trace 0 correspond au circuit et reste fixe.
     frames = [
         go.Frame(
             data=[go.Scatter(x=[row["X"]], y=[row["Y"]])],
             name=f"frame_{i}",
-            traces=[1]  # Met à jour uniquement le pilote
+            traces=[1]
         )
         for i, row in data.iterrows()
     ]
@@ -47,7 +49,8 @@ def create_visualization(data: pd.DataFrame, driver_name: str = "Leclerc", drive
 
 
 def manage_buttons(fig: go.Figure):
-        fig.update_layout(
+    # Les boutons Plotly declenchent les frames definies dans `fig.frames`.
+    fig.update_layout(
         template="plotly_dark",
         height=750,
         showlegend=False,
