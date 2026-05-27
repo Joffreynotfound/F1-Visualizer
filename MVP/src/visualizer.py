@@ -1,35 +1,6 @@
 import plotly.graph_objects as go
 import pandas as pd
 
-def manage_buttons(fig: go.Figure):
-    fig.update_layout(
-        updatemenus=[dict(
-            type="buttons",
-            showactive=False,
-            direction="right",
-            x=0.0,
-            y=1.1,
-            xanchor="left",
-            yanchor="top",
-            pad=dict(r=10, t=0),
-            buttons=[
-                dict(
-                    label="🏁 Play",
-                    method="animate",
-                    args=[None, dict(frame=dict(duration=40, redraw=False), 
-                                     transition=dict(duration=0), 
-                                     fromcurrent=True)]
-                ),
-                dict(
-                    label="⏸ Pause",
-                    method="animate",
-                    args=[[None], dict(frame=dict(duration=0, redraw=False), 
-                                       mode="immediate", transition=dict(duration=0))]
-                )
-            ]
-        )]
-    )
-
 def create_visualization(data: pd.DataFrame, driver_name: str = "Leclerc", driver_color: str = "rgba(255, 0, 0, 1)") -> go.Figure:
     fig = go.Figure()
 
@@ -69,7 +40,43 @@ def create_visualization(data: pd.DataFrame, driver_name: str = "Leclerc", drive
         for i, row in data.iterrows()
     ]
     fig.frames = frames
-
-    manage_buttons(fig)
     
+    manage_buttons(fig)
+
     return fig
+
+
+def manage_buttons(fig: go.Figure):
+        fig.update_layout(
+        template="plotly_dark",
+        height=750,
+        showlegend=False,
+        margin=dict(l=0, r=0, t=50, b=0),
+        xaxis=dict(visible=False, scaleanchor="y"),
+        yaxis=dict(visible=False),
+        updatemenus=[dict(
+            type="buttons",
+            showactive=False,
+            direction="right",
+            x=0.0,
+            y=1.1,
+            xanchor="left",
+            yanchor="top",
+            pad=dict(r=10, t=0),
+            buttons=[
+                dict(
+                    label="🏁 Play",
+                    method="animate",
+                    args=[None, dict(frame=dict(duration=40, redraw=False), 
+                                     transition=dict(duration=0), 
+                                     fromcurrent=True)]
+                ),
+                dict(
+                    label="⏸ Pause",
+                    method="animate",
+                    args=[[None], dict(frame=dict(duration=0, redraw=False), 
+                                       mode="immediate", transition=dict(duration=0))]
+                )
+            ]
+        )]
+    )
