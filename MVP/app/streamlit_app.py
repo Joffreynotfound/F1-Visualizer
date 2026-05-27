@@ -17,4 +17,7 @@ if data is None:
     st.write("Failed to load data.")
 else:
     fig = create_visualization(data)
+    st.metric("Max speed", f"{data['Speed'].max():.0f} km/h")
+    st.metric("Average speed", f"{data['Speed'].mean():.0f} km/h")
+    st.metric("Telemetry points", len(data))
     st.plotly_chart(fig, use_container_width=True)
