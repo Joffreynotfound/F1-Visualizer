@@ -16,7 +16,9 @@ data = load_data(PROJECT_ROOT / "data/processed/lec_telemetry.csv")
 if data is None:
     st.write("Failed to load data.")
 else:
-    fig = create_visualization(data)
+    driver_color = st.color_picker("Driver color", "#ff0000")
+    fig = create_visualization(data, driver_color=driver_color)
+
     st.metric("Max speed", f"{data['Speed'].max():.0f} km/h")
     st.metric("Average speed", f"{data['Speed'].mean():.0f} km/h")
     st.metric("Telemetry points", len(data))
