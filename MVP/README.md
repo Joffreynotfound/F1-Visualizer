@@ -2,47 +2,85 @@
 
 Ce dossier contient le MVP du projet **F1 Visualizer**.
 
-L'objectif principal est d'abord de réaliser une **analyse exploratoire des donnees** afin de mieux comprendre les informations disponibles : pilotes, tours, chronos, telemetrie, vitesse et donnees de circuit.
+L'application Streamlit affiche la telemetrie du meilleur tour de Charles Leclerc a Monza. Elle s'appuie sur un CSV deja prepare dans `data/processed/lec_telemetry.csv`, puis affiche le trace du circuit, un marqueur anime pour le pilote et quelques metriques simples.
 
-Une fois cette premiere analyse effectuee, le MVP doit permettre de construire une visualisation simple autour du meilleur tour d'un pilote.
+## Fonctionnalites actuelles
 
-## Objectifs du MVP
+- Chargement d'un fichier CSV de telemetrie propre.
+- Validation des colonnes minimales attendues : `X`, `Y`, `Speed`, `Time`.
+- Visualisation du trace du circuit avec Plotly.
+- Animation du pilote sur la carte a partir des coordonnees `X` et `Y`.
+- Selection de la couleur du pilote dans l'interface Streamlit.
+- Affichage de metriques simples :
+  - vitesse maximale ;
+  - vitesse moyenne ;
+  - nombre de points de telemetrie.
 
-1. Explorer les donnees disponibles.
-2. Identifier les donnees utiles pour une analyse de performance.
-3. Nettoyer et preparer les donnees de telemetrie.
-4. Selectionner une course, un pilote ou une session pertinente.
-5. Recuperer son meilleur tour.
-6. Afficher le trace du circuit.
-7. Afficher la vitesse sur le circuit.
-8. Afficher quelques metriques simples.
-
-## Fonctionnalites attendues
-
-Le MVP doit permettre de :
-
-- charger les donnees de course et de telemetrie ;
-- trouver le meilleur tour d'un pilote ;
-- afficher le circuit sous forme de trace ;
-- colorer ou annoter le trace avec la vitesse ;
-- afficher des metriques simples comme le temps au tour, la vitesse maximale, la vitesse moyenne ou le nombre de points de telemetrie.
-
-## Structure du projet
+## Structure
 
 ```text
 MVP/
 ├── app/
 │   └── streamlit_app.py
 ├── data/
+│   └── processed/
+│       └── lec_telemetry.csv
 ├── notebooks/
+│   └── EDA_Fastf1.ipynb
 ├── src/
 │   ├── data_loader.py
-│   ├── telemetry_cleaner.py
 │   └── visualizer.py
+├── .gitignore
 ├── requirements.txt
 └── README.md
 ```
 
-## Prochaine etape
+## Roles des fichiers
 
-La prochaine etape est de commencer par l'analyse exploratoire dans un notebook, puis de transformer les parties utiles en fonctions reutilisables dans `src/` avant de les afficher dans l'application Streamlit.
+- `app/streamlit_app.py` : point d'entree de l'application Streamlit.
+- `src/data_loader.py` : charge le CSV et verifie que les colonnes necessaires sont presentes.
+- `src/visualizer.py` : construit la figure Plotly, le trace du circuit, le pilote et les boutons Play/Pause.
+- `notebooks/EDA_Fastf1.ipynb` : notebook d'exploration FastF1 utilise pour analyser les donnees et exporter le CSV propre.
+- `data/processed/lec_telemetry.csv` : donnees de telemetrie utilisees par l'application.
+
+## Lancer l'application
+
+Depuis la racine du repository :
+
+```bash
+cd MVP
+source env/bin/activate
+streamlit run app/streamlit_app.py
+```
+
+Si les dependances ne sont pas encore installees :
+
+```bash
+cd MVP
+source env/bin/activate
+pip install -r requirements.txt
+```
+
+## Pipeline actuel
+
+```text
+Notebook FastF1
+    ↓
+Nettoyage et export CSV
+    ↓
+data/processed/lec_telemetry.csv
+    ↓
+Application Streamlit
+    ↓
+Carte animee + metriques
+```
+
+Le nettoyage n'est pas refait dans l'application. Le MVP part du principe que le fichier `lec_telemetry.csv` est deja propre.
+
+## Ameliorations possibles
+
+- Ajouter un choix de pilote ou de course.
+- Ajouter un slider pour regler la vitesse de l'animation.
+- Afficher la vitesse avec une couleur sur le trace.
+- Ajouter des graphiques vitesse, throttle et freinage en fonction de la distance.
+- Deplacer la generation du CSV dans un script reproductible si l'application doit charger des donnees FastF1 dynamiquement.
