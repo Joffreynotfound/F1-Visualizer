@@ -1,0 +1,6 @@
+env/
+fastf1_cache/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+*.log

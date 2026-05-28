@@ -29,7 +29,7 @@ def create_visualization(data: pd.DataFrame, driver_name: str = "Leclerc", drive
             marker=dict(color=driver_color, size=14, symbol="circle"),
             name=driver_name,
             hoverinfo="skip"
-        )
+            )
     )
     # Chaque frame met a jour uniquement la trace 1, c'est-a-dire le marqueur
     # du pilote. La trace 0 correspond au circuit et reste fixe.
