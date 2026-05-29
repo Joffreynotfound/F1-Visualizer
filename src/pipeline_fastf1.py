@@ -28,5 +28,5 @@ def extract_data(year: int, grand_prix: str, session_type: str) -> pd.DataFrame:
         telemetry_list.append(telemetry)
 
     telemetry = pd.concat(telemetry_list, ignore_index=True)
-    telemetry.to_csv(PROJECT_ROOT / "data" / "processed" / f"{year}_{grand_prix}_{session_type}_telemetry.csv", index=False)
+    telemetry.to_parquet(PROJECT_ROOT / "data" / "processed" / f"{year}_{grand_prix}_{session_type}_telemetry.parquet", index=False)
     return telemetry
