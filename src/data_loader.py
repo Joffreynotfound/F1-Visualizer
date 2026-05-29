@@ -11,7 +11,7 @@ def validate_telemetry_data(data):
 
 def load_data(file_path: str) -> pd.DataFrame:
     try:
-        data = pd.read_csv(file_path)
+        data = pd.read_parquet(file_path)
         validate_telemetry_data(data)
         print(f"Data loaded successfully from {file_path}")
         return data
