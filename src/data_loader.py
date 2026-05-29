@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-REQUIRED_COLUMNS = {"X", "Y", "Speed", "Time"}
+REQUIRED_COLUMNS = {"X", "Y", "Speed", "Time", "Driver", "Team"}
 
 def validate_telemetry_data(data):
     missing_columns = REQUIRED_COLUMNS - set(data.columns)

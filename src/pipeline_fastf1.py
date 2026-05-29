@@ -25,6 +25,7 @@ def extract_data(year: int, grand_prix: str, session_type: str) -> pd.DataFrame:
         fastest_lap = laps.pick_fastest()
         telemetry = fastest_lap.get_telemetry()
         telemetry["Driver"] = driver  # Ajout du nom du pilote dans les donnees
+        telemetry["Team"] = session.results.loc[session.results["Abbreviation"] == driver, "Team"].values[0]  # Ajout du nom de l'equipe
         telemetry_list.append(telemetry)
 
     telemetry = pd.concat(telemetry_list, ignore_index=True)
