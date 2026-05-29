@@ -24,9 +24,21 @@ def create_visualization(data: pd.DataFrame) -> go.Figure:
 
     init_drivers_traces(fig, data)
     manage_buttons(fig)
-    
+
     return fig
 
+# def create_animation(fig: go.Figure, data : pd.DataFrame):
+#         drivers = data["Driver"].unique()
+#         for driver in drivers:
+#             driver_data = data[data["Driver"] == driver]
+#             frames = [
+#             go.Frame(
+#                 data=[go.Scatter(x=[driver_data["X"]], y=[driver_data["Y"]])],
+#                 name=f"frame_{driver}",
+#                 traces=[1]
+#             )
+#         ]
+#         fig.frames = frames
 
 def init_drivers_traces(fig: go.Figure, data: pd.DataFrame):
     drivers = data["Driver"].unique()
@@ -34,8 +46,9 @@ def init_drivers_traces(fig: go.Figure, data: pd.DataFrame):
         driver_data = data[data["Driver"] == driver]
         driver_team = driver_data["Team"].iloc[0]
         try:
-            driver_color = fastf1.plotting.team_color(driver_team)
+            driver_color = driver_data["Color"].iloc[0]
         except:
+            print(f"Warning: No color found for team '{driver_team}'. Using default color.")
             driver_color = "#FFFFFF"
         fig.add_trace(
             go.Scatter(
