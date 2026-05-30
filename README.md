@@ -32,7 +32,7 @@ Le projet est pensé comme une base open source simple à comprendre :
 Clonez le projet, puis créez un environnement virtuel :
 
 ```bash
-git clone <url-du-repo>
+git clone https://github.com/Joffreynotfound/F1-Visualizer.git
 cd F1-Visualizer
 python3 -m venv env
 source env/bin/activate
