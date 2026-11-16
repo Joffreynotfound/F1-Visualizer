@@ -1,7 +1,6 @@
 # Fonctions Plotly pour les visualisations.
 import plotly.graph_objects as go
 import pandas as pd
-import fastf1.plotting
 
 
 def create_visualization(data: pd.DataFrame, selected_drivers: list, track_mode: str) -> go.Figure:
@@ -79,12 +78,7 @@ def create_animation(fig: go.Figure, data : pd.DataFrame, selected_drivers: list
 def init_drivers_traces(fig: go.Figure, data: pd.DataFrame, selected_drivers: list):
     for driver in selected_drivers:
         driver_data = data[data["Driver"] == driver]
-        driver_team = driver_data["Team"].iloc[0]
-        try:
-            driver_color = driver_data["Color"].iloc[0]
-        except:
-            print(f"Warning: No color found for team '{driver_team}'. Using default color.")
-            driver_color = "#FFFFFF"
+        driver_color = driver_data["Color"].iloc[0] if "Color" in driver_data.columns else "#FFFFFF"
         fig.add_trace(
             go.Scatter(
                 x=[driver_data["X"].iloc[0]],
@@ -138,10 +132,7 @@ def create_telemetry_chart(data: pd.DataFrame, selected_drivers: list, metric: s
     for driver in selected_drivers:
         driver_data = data[data["Driver"] == driver]
         
-        try:
-            driver_color = driver_data["Color"].iloc[0]
-        except:
-            driver_color = "#FFFFFF"
+        driver_color = driver_data["Color"].iloc[0] if "Color" in driver_data.columns else "#FFFFFF"
 
         fig.add_trace(go.Scatter(
             x=driver_data["Distance"],

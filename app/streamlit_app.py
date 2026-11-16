@@ -19,7 +19,7 @@ PROCESSED_DATA_DIR.mkdir(parents=True, exist_ok=True)
 st.set_page_config(page_title="F1 Telemetry Visualizer", layout="wide")
 
 st.title("F1 Telemetry Visualizer")
-st.markdown("Visualisez les données de télémétrie des pilotes de Formule 1 en temps réel.")
+st.markdown("Visualisez les données de télémétrie des pilotes de Formule 1 (sessions passées).")
 
 # Sélection de la session
 year = st.sidebar.selectbox("Année", [2023, 2022, 2021])
@@ -41,9 +41,15 @@ if not file_path.exists():
     st.stop()
 
 @st.cache_data
-def get_data():
-     return load_data(str(file_path))
-data = get_data()
+def get_data(path: str):
+    return load_data(path)
+
+
+try:
+    data = get_data(str(file_path))
+except Exception as exc:
+    st.error(f"Impossible de charger {file_path.name} : {exc}")
+    st.stop()
 
 if data is not None:
     st.sidebar.header("Contrôle de la Course")
@@ -53,7 +59,7 @@ if data is not None:
     selected_drivers = st.sidebar.multiselect(
         "Sélectionnez les pilotes à comparer :",
         options=all_drivers,
-        default=["VER", "LEC"],
+        default=[d for d in ["VER", "LEC"] if d in all_drivers] or all_drivers[:2],
         key="selector_pilotes_duel"
     )
 
@@ -93,8 +99,8 @@ if data is not None:
         st.divider()
         st.markdown("### Animation du Circuit")
         fig_map = create_visualization(data, selected_drivers, track_mode)
-        st.plotly_chart(fig_map, use_container_width=True)
+        st.plotly_chart(fig_map, width="stretch")
     
         st.markdown("### Analyse Télémétrique")
         fig_telemetry = create_telemetry_chart(data, selected_drivers, metric_to_plot)
-        st.plotly_chart(fig_telemetry, use_container_width=True)
+        st.plotly_chart(fig_telemetry, width="stretch")

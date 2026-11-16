@@ -6,3 +6,5 @@ fastf1_cache/
 .ipynb_checkpoints/
 
 *.log
+
+fixes_audit.patch

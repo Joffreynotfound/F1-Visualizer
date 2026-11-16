@@ -1,0 +1,317 @@
+From 2aa5a3052160510c332edd5b4489bfd3ddaa63a0 Mon Sep 17 00:00:00 2001
+From: Joffrey <joffreyjohnahyee@gmail.com>
+Date: Mon, 16 Nov 2026 23:58:40 +0100
+Subject: [PATCH] =?UTF-8?q?Corrige=20les=20erreurs=20relev=C3=A9es=20?=
+ =?UTF-8?q?=C3=A0=20l'audit?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- requirements: pandas>=2.1.1,<3 (conflit avec fastf1 3.8.3)
+- app: le cache dépend désormais du fichier; défauts de pilotes valides; erreur affichée si fichier invalide
+- data_loader: lève des erreurs explicites au lieu de renvoyer None
+- pipeline: crée les dossiers, vérifie le chargement des tours, ignore les pilotes sans tour valide
+- visualizer: retire l'import inutile et les except nus
+- retire les .pyc versionnés de MVP/
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01PZZJocBahudLR9SJtYsqLi
+---
+ .../__pycache__/streamlit_app.cpython-312.pyc | Bin 1495 -> 0 bytes
+ .../__pycache__/data_loader.cpython-312.pyc   | Bin 1097 -> 0 bytes
+ .../__pycache__/visualizer.cpython-312.pyc    | Bin 2937 -> 0 bytes
+ app/streamlit_app.py                          |  20 +++++++++------
+ requirements.txt                              |   2 +-
+ src/data_loader.py                            |  23 ++++++++++--------
+ src/pipeline_fastf1.py                        |  18 +++++++++++---
+ src/visualizer.py                             |  13 ++--------
+ 8 files changed, 44 insertions(+), 32 deletions(-)
+ delete mode 100644 MVP/app/__pycache__/streamlit_app.cpython-312.pyc
+ delete mode 100644 MVP/src/__pycache__/data_loader.cpython-312.pyc
+ delete mode 100644 MVP/src/__pycache__/visualizer.cpython-312.pyc
+
+diff --git a/MVP/app/__pycache__/streamlit_app.cpython-312.pyc b/MVP/app/__pycache__/streamlit_app.cpython-312.pyc
+deleted file mode 100644
+index 7fadf5188bcb3b6a81c88bf2d3fb7bc258d618e0..0000000000000000000000000000000000000000
+GIT binary patch
+literal 0
+HcmV?d00001
+
+literal 1495
+zcmbVL&rcgi6rTOzpRB!ZmheLe;y_U9HpLE2(pH6_K$=3;6hu%CzO1&M=XlN9yP6#!
+z-b1yVh|~*F5230m5%rRa9DL0G(2FhHLMDntRrQb?Qf@g_yJo#o)l<LAym{|?-@N&D
+z_P10ji4a07=3w=ifY4vwCP4Hocw6QXdV(;*oPmlQMwmDFnotzDZcZ$UJOTkC2VA$K
+znhGRB9Gr#KbeIc(g<*tHF%EGoI(-Ng6ChUmgKCKCU>FDB5lD~-P7YRovWStYrHg4l
+zjv8_;Q_OH4pR0}s-63!+?1eav`*WP*5v1W<P$?>)xQegve%KiR_om=bgY#J*1ho)2
+ziTe)t?!Gv{BglXP1J9*iZqV;6gdG8J3KX37oT`2t<U$1gV)-W#XMW}by|Wwtm)?6l
+zz3ZV)fd8TAxitbx;MTt;_%u)s0fSh1-XHQBT<-iEul!ApW8#WND{s6P#RQv_avVz-
+zriN9lQ7y-@{t^L=g1V{O8=9dz8r99Zle%*?d;cs0#L0T(yhY3s*f!w20VS1!0X3kc
+zF;%iRo&GzTZUD|wGwZ4Q4O5PEo9LTBvL(|ni4&VBmkWhLA;&QZ`vtXINZi#PW^D@q
+zv&cPfafGQt*@<M=Yx#<ky0r;JdjMUAlUWN6&RV8kr}kQoW6FjNYRRlqO|Jt{w{%P^
+zxlxv|DFLl!=#=p`Wid;m6+{1)2wgWCHjArjSvNpcS&V>f8k^v;2-K;~q?Og>ufAAV
+zQ&*Rl*I4Y{>VkTEX_bkd3X5u%1$E2>n-bRN`J;Ll2SU8xoh1W5fsmM&h)|sxz!E;w
+zR}j6BMYf1efl0m-s->6KfsnXAUs->^qMpTii3v6BArot$)tO*Gok^BqQlp`kDjK1`
+zqPO1Hem8XY{z_i6tbFg<s%BYJR^wfKre@*|18$Pb2qEt=*drW5rvk@uuh772H1rB3
+z|CE*8#qYm6k|*2p<e_}|NY1zAe3NU-)2?)!9N0VGPL8>;(>UV9o%nWqN8Xkn3%g(b
+zAa&5_-{|6N^x<g~aS50As*f&o(C~>g)Eb#>OS5j`Wh}Ehd>9*X#bY7n&K!%9JHNBI
+zz1T`k{4QQPQO0+tpUgd;+rQcT>`<9?zkZn<+oR1Zo#dRma3ZGM`JJWhrAO;~c>j|h
+zYe!@G_E`RK>}qqOHF~27t&y3IID6cqnfsUax1N4<G=8l;e(iAlM$>Lx{QSlB)`eRg
+malS`urL#{b_VF*dj(Fu*RNVQU<?ZF&g=cGjh|^>eA@mPdTWUlA
+
+diff --git a/MVP/src/__pycache__/data_loader.cpython-312.pyc b/MVP/src/__pycache__/data_loader.cpython-312.pyc
+deleted file mode 100644
+index 9289649d498ae222dc7388021a7565215bedb776..0000000000000000000000000000000000000000
+GIT binary patch
+literal 0
+HcmV?d00001
+
+literal 1097
+zcmZ9KO=uHA6vzLwAI+xPq&1;c6kYHG7Sy5#!Kl@u6$D#9YQ=^^Sazm1b@SoO#G0Cl
+zhzC7+R1iV&U`0XkDhQsvMCw7u+&p;;tp}+WnQc;9-(_d_{r_*@`@Q+x)zt|A*;3#1
+zM+5k&U)o`{4od?79)W_A5Lq$>YP=v>gPQk{HL1lcYBMq&)ma~t7VWraWjm_Gi~Z86
+zkpW#(kt>RfE9+9ez?3~&W{d`8jZ<q(0810mf8}aQ>aS7MFx~EMO}uVZne7DTNR9A>
+zjJ4C0)W{P&HQJiHqzca%ne7?Q3z08gb%Rn^DHKJ<^(@tWap=O>nTtcGawpH79UC4Q
+zRi<E4#abHGdD#yuY>4v`_Y7rGU-~LpSSgfiiG%^bb(edGFQ4xhJm}Y|Tv+lc<NM21
+z)px@W^VF9tCt1h}O!8_@OL!81Zd)7xa0iXvJ#SL;m)=ginpp5MUwSil&V7&dHWHib
+zTldcA>U)pXw+t*Kj@O;zO%qPvk{(#aC-Wi8m3=v-IyjRRUR+1mZWDeJ5spKy@}Jgi
+z{};7YvU5agZxl7sW=XJ)GuCn@sF6|Zgml`zUErJNj5Q9UW~_INgJRCOZB$#&88U;L
+z<~U}EXO7HnKjll`jX+XYRDysBF<A-2syoR`1$TDOV9{lIHEt;gDx5Rw&P?S)7FqPB
+zHRX)!*~%zW<#6WHTp(^l+?8GC`Jz<up_>6K%Y3QmnY;%8-xyt7CiE3_U6&^!%({z}
+zt!)9IHDWB<TGNQx=|-~W;jIU^9v@yv?!Ip|oE^`sug>m<(^c=@KVO}{R!?NUI!C@G
+zQ};LgX>3R@!m!g(_RzcQ?}C+VBboZ!v<*AGEYbk(_8-Li_+ZNXkQhvupAz<9%JgEY
+zqwE){FSwR)O?qV-Q%J7jn%8OW7g*HfEAVbD&;u+xM++rd3E2SO4nSW5u@6AgB!v7x
+lYSBTuzmD!j%OodAv(q8z$EhY9l76=7<+kVBe(PgY?jNRR0J;DG
+
+diff --git a/MVP/src/__pycache__/visualizer.cpython-312.pyc b/MVP/src/__pycache__/visualizer.cpython-312.pyc
+deleted file mode 100644
+index f07ff05e841466a40828df1cafabd1a6db91672a..0000000000000000000000000000000000000000
+GIT binary patch
+literal 0
+HcmV?d00001
+
+literal 2937
+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
+
+diff --git a/app/streamlit_app.py b/app/streamlit_app.py
+index 2246a7c..779b471 100644
+--- a/app/streamlit_app.py
++++ b/app/streamlit_app.py
+@@ -19,7 +19,7 @@ PROCESSED_DATA_DIR.mkdir(parents=True, exist_ok=True)
+ st.set_page_config(page_title="F1 Telemetry Visualizer", layout="wide")
+ 
+ st.title("F1 Telemetry Visualizer")
+-st.markdown("Visualisez les données de télémétrie des pilotes de Formule 1 en temps réel.")
++st.markdown("Visualisez les données de télémétrie des pilotes de Formule 1 (sessions passées).")
+ 
+ # Sélection de la session
+ year = st.sidebar.selectbox("Année", [2023, 2022, 2021])
+@@ -41,9 +41,15 @@ if not file_path.exists():
+     st.stop()
+ 
+ @st.cache_data
+-def get_data():
+-     return load_data(str(file_path))
+-data = get_data()
++def get_data(path: str):
++    return load_data(path)
++
++
++try:
++    data = get_data(str(file_path))
++except Exception as exc:
++    st.error(f"Impossible de charger {file_path.name} : {exc}")
++    st.stop()
+ 
+ if data is not None:
+     st.sidebar.header("Contrôle de la Course")
+@@ -53,7 +59,7 @@ if data is not None:
+     selected_drivers = st.sidebar.multiselect(
+         "Sélectionnez les pilotes à comparer :",
+         options=all_drivers,
+-        default=["VER", "LEC"],
++        default=[d for d in ["VER", "LEC"] if d in all_drivers] or all_drivers[:2],
+         key="selector_pilotes_duel"
+     )
+ 
+@@ -93,8 +99,8 @@ if data is not None:
+         st.divider()
+         st.markdown("### Animation du Circuit")
+         fig_map = create_visualization(data, selected_drivers, track_mode)
+-        st.plotly_chart(fig_map, use_container_width=True)
++        st.plotly_chart(fig_map, width="stretch")
+     
+         st.markdown("### Analyse Télémétrique")
+         fig_telemetry = create_telemetry_chart(data, selected_drivers, metric_to_plot)
+-        st.plotly_chart(fig_telemetry, use_container_width=True)
++        st.plotly_chart(fig_telemetry, width="stretch")
+diff --git a/requirements.txt b/requirements.txt
+index c188979..625ed4d 100644
+--- a/requirements.txt
++++ b/requirements.txt
+@@ -1,4 +1,4 @@
+ fastf1==3.8.3
+-pandas==3.0.3
++pandas>=2.1.1,<3
+ plotly==6.7.0
+ streamlit==1.58.0
+diff --git a/src/data_loader.py b/src/data_loader.py
+index 49006de..e14f866 100644
+--- a/src/data_loader.py
++++ b/src/data_loader.py
+@@ -1,20 +1,23 @@
+ # Chargement leger des donnees preparees pour Streamlit.
+ 
++import logging
++
+ import pandas as pd
+ 
++logger = logging.getLogger(__name__)
++
+ REQUIRED_COLUMNS = {"X", "Y", "Speed", "Time", "Driver", "Team"}
+ 
+-def validate_telemetry_data(data):
++
++def validate_telemetry_data(data: pd.DataFrame) -> None:
+     missing_columns = REQUIRED_COLUMNS - set(data.columns)
+     if missing_columns:
+-        raise ValueError(f"Missing columns: {missing_columns}")
++        raise ValueError(f"Colonnes manquantes : {sorted(missing_columns)}")
++
+ 
+ def load_data(file_path: str) -> pd.DataFrame:
+-    try:
+-        data = pd.read_parquet(file_path)
+-        validate_telemetry_data(data)
+-        print(f"Data loaded successfully from {file_path}")
+-        return data
+-    except Exception as e:
+-        print(f"An error occurred while loading data: {e}")
+-        return None
++    """Charge et valide un fichier Parquet. Leve une exception en cas de probleme."""
++    data = pd.read_parquet(file_path)
++    validate_telemetry_data(data)
++    logger.info("Donnees chargees depuis %s", file_path)
++    return data
+diff --git a/src/pipeline_fastf1.py b/src/pipeline_fastf1.py
+index 15c29e5..ecbe7ac 100644
+--- a/src/pipeline_fastf1.py
++++ b/src/pipeline_fastf1.py
+@@ -7,14 +7,22 @@ import pandas as pd
+ 
+ PROJECT_ROOT = Path(__file__).resolve().parents[1]
+ CACHE_DIR = PROJECT_ROOT / "data" / "raw" / "fastf1_cache"
+-
+-CACHE_DIR.mkdir(parents=True, exist_ok=True)
++PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
+ 
+ def extract_data(year: int, grand_prix: str, session_type: str) -> pd.DataFrame:
+     # Extraction des donnees de la session specifiée
++    CACHE_DIR.mkdir(parents=True, exist_ok=True)
++    PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
+     fastf1.Cache.enable_cache(str(CACHE_DIR))
+     session = fastf1.get_session(year, grand_prix, session_type)
+     session.load()  # Charge les donnees de la session
++    try:
++        session.laps  # leve DataNotLoadedError si le chargement a echoue silencieusement
++    except Exception as exc:
++        raise RuntimeError(
++            f"Chargement impossible des tours pour {year} {grand_prix} {session_type}. "
++            "Verifiez le reseau ou l'acces aux donnees F1 (authentification possible selon la version de FastF1)."
++        ) from exc
+ 
+     # Extraction de la liste des pilotes
+     drivers = session.results["Abbreviation"].unique().tolist()
+@@ -23,6 +31,8 @@ def extract_data(year: int, grand_prix: str, session_type: str) -> pd.DataFrame:
+     for driver in drivers:
+         laps = session.laps.pick_drivers(driver)
+         fastest_lap = laps.pick_fastest()
++        if fastest_lap is None:  # aucun tour valide (abandon, non-partant...)
++            continue
+         telemetry = fastest_lap.get_telemetry()
+         telemetry["Driver"] = driver  # Ajout du nom du pilote dans les donnees
+         telemetry["Team"] = session.results.loc[session.results["Abbreviation"] == driver, "TeamName"].values[0]  # Ajout du nom de l'equipe
+@@ -30,6 +40,8 @@ def extract_data(year: int, grand_prix: str, session_type: str) -> pd.DataFrame:
+         telemetry["Color"] = f"#{color_hex}"
+         telemetry_list.append(telemetry)
+ 
++    if not telemetry_list:
++        raise RuntimeError(f"Aucune telemetrie exploitable pour {year} {grand_prix} {session_type}.")
+     telemetry = pd.concat(telemetry_list, ignore_index=True)
+-    telemetry.to_parquet(PROJECT_ROOT / "data" / "processed" / f"{year}_{grand_prix}_{session_type}_telemetry.parquet", index=False)
++    telemetry.to_parquet(PROCESSED_DIR / f"{year}_{grand_prix}_{session_type}_telemetry.parquet", index=False)
+     return telemetry
+diff --git a/src/visualizer.py b/src/visualizer.py
+index d669ef8..14a288f 100644
+--- a/src/visualizer.py
++++ b/src/visualizer.py
+@@ -1,7 +1,6 @@
+ # Fonctions Plotly pour les visualisations.
+ import plotly.graph_objects as go
+ import pandas as pd
+-import fastf1.plotting
+ 
+ 
+ def create_visualization(data: pd.DataFrame, selected_drivers: list, track_mode: str) -> go.Figure:
+@@ -79,12 +78,7 @@ def create_animation(fig: go.Figure, data : pd.DataFrame, selected_drivers: list
+ def init_drivers_traces(fig: go.Figure, data: pd.DataFrame, selected_drivers: list):
+     for driver in selected_drivers:
+         driver_data = data[data["Driver"] == driver]
+-        driver_team = driver_data["Team"].iloc[0]
+-        try:
+-            driver_color = driver_data["Color"].iloc[0]
+-        except:
+-            print(f"Warning: No color found for team '{driver_team}'. Using default color.")
+-            driver_color = "#FFFFFF"
++        driver_color = driver_data["Color"].iloc[0] if "Color" in driver_data.columns else "#FFFFFF"
+         fig.add_trace(
+             go.Scatter(
+                 x=[driver_data["X"].iloc[0]],
+@@ -138,10 +132,7 @@ def create_telemetry_chart(data: pd.DataFrame, selected_drivers: list, metric: s
+     for driver in selected_drivers:
+         driver_data = data[data["Driver"] == driver]
+         
+-        try:
+-            driver_color = driver_data["Color"].iloc[0]
+-        except:
+-            driver_color = "#FFFFFF"
++        driver_color = driver_data["Color"].iloc[0] if "Color" in driver_data.columns else "#FFFFFF"
+ 
+         fig.add_trace(go.Scatter(
+             x=driver_data["Distance"],
+-- 
+2.43.0
+

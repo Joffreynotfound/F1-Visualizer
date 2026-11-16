@@ -14,7 +14,7 @@ def create_visualization(data: pd.DataFrame, driver_name: str = "Leclerc", drive
             line=dict(
                 color="rgba(180, 180, 180, 0.35)",
                 width=8
-            ),
+            ), 
             name="Track layout",
             hoverinfo="skip"
         )
